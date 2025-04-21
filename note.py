@@ -53,6 +53,10 @@ class FloatingNoteApp(QWidget):
         self.add_button = QPushButton("+", self)
         self.add_button.clicked.connect(self.create_new_window)
         self.add_button.setFixedSize(20, 20)
+        # 最小化窗口按钮
+        self.minimize_button = QPushButton("-", self)
+        self.minimize_button.clicked.connect(self.minimize_window)
+        self.minimize_button.setFixedSize(20, 20)
 
         # 置顶按钮
         self.spin_button = QPushButton("o", self)
@@ -64,25 +68,26 @@ class FloatingNoteApp(QWidget):
         self.title_label.setStyleSheet("color: #333;")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_label.mouseDoubleClickEvent = self.change_title
-
+        # 标题编辑栏
         self.title_edit = QLineEdit()
-        # self.title_edit.setFont(QFont("宋体", 12))
+        self.title_edit.setFont(QFont("宋体", 12))
         self.title_edit.setStyleSheet("color: #333;")
         self.title_edit.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.title_edit.setVisible(False)
         self.title_edit.editingFinished.connect(self.set_title)
+        # 内容文本编辑框
+        self.text_edit = QPlainTextEdit(self)
+        self.text_edit.setPlaceholderText("输入内容...")
 
+        # 添加页面布局
         button_layout.addWidget(self.delete_button)
         button_layout.addWidget(self.spin_button)
         button_layout.addWidget(self.title_label)
         button_layout.addWidget(self.title_edit)
+        button_layout.addWidget(self.minimize_button)
         button_layout.addWidget(self.add_button)
         button_layout.setSpacing(5)  # 按钮间距
         layout.addLayout(button_layout)
-
-        # 文本编辑框
-        self.text_edit = QPlainTextEdit(self)
-        self.text_edit.setPlaceholderText("输入内容...")
         layout.addWidget(self.text_edit)
         self.setLayout(layout)
 
@@ -99,6 +104,10 @@ class FloatingNoteApp(QWidget):
             note TEXT
         )
         ''')
+    def minimize_window(self):
+        """最小化窗口"""
+        self.hide()
+        self.tray_icon.show()  # 显示托盘图标
 
     def create_menu(self):
         menu = QMenu()
